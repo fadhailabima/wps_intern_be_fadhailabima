@@ -47,12 +47,13 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::get('/direktur/dailylog', [DirekturController::class, 'getDailyLogsByManager']);
     });
 
+    // Add daily log API for Manager and Staff
     Route::middleware('role:Manager,Staff')->group(function () {
         Route::post('/dailylog', [ManagerController::class, 'addDailyLog']);
     });
 
+    // Update daily log status API for Manager and Direktur
     Route::middleware('role:Manager,Direktur')->group(function () {
-        Route::post('/dailylog', [DailyLogController::class, 'addDailyLog']);
         Route::put('/dailylog/{id}', [DailyLogController::class, 'updateStatusDailyLog']);
     });
 });
