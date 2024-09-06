@@ -19,6 +19,11 @@ class ManagerController extends Controller
                 ->where('role_id', '!=', $user->role_id);
         })->get();
 
+        $dailyLogs->map(function ($dailyLog) {
+            $dailyLog->image_url = $dailyLog->foto ? url('storage/dailylog_proof/' . $dailyLog->foto) : null;
+            return $dailyLog;
+        });
+
         return response()->json(['data' => $dailyLogs], 200);
     }
 }

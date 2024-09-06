@@ -16,6 +16,11 @@ class StaffController extends Controller
 
         $dailyLogs = DailyLog::where('user_id', $user->id)->get();
 
+        $dailyLogs->map(function ($dailyLog) {
+            $dailyLog->image_url = $dailyLog->foto ? url('storage/dailylog_proof/' . $dailyLog->foto) : null;
+            return $dailyLog;
+        });
+
         return response()->json(['data' => $dailyLogs], 200);
     }
 }

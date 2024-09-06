@@ -17,6 +17,10 @@ class DirekturController extends Controller
             ->select('daily_logs.*')
             ->get();
 
+        $dailyLogs = $dailyLogs->map(function ($dailyLog) {
+            $dailyLog->image_url = $dailyLog->foto ? url('storage/dailylog_proof/' . $dailyLog->foto) : null;
+            return $dailyLog;
+        });
         return response()->json(['data' => $dailyLogs], 200);
     }
 }
