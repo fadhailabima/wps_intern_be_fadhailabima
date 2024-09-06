@@ -58,6 +58,7 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     });
 });
 
+// Get image from storage
 Route::get('/storage/app/public/{directory}/{filename}', function ($directory, $filename) {
     $path = storage_path('app/public/' . $directory . '/' . $filename);
 
