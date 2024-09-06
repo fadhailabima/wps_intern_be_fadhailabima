@@ -60,4 +60,18 @@ class DailyLogController extends Controller
 
         return response()->json(['message' => 'Status updated successfully', 'data' => $dailyLog], 200);
     }
+
+    public function getDailyLogByUser()
+    {
+        $user = Auth::user();
+
+        $dailyLogs = DailyLog::where('user_id', $user->id)->get();
+
+        $dailyLogs->map(function ($dailyLog) {
+            $dailyLog->image_url = $dailyLog->foto ? url('storage/dailylog_proof/' . $dailyLog->foto) : null;
+            return $dailyLog;
+        });
+
+        return response()->json(['data' => $dailyLogs], 200);
+    }
 }

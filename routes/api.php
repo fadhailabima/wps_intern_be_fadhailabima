@@ -3,7 +3,6 @@
 use App\Http\Controllers\DailyLogController;
 use App\Http\Controllers\DirekturController;
 use App\Http\Controllers\ManagerController;
-use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,26 +29,24 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     // logout API
     Route::post('/logout', [UserController::class, 'logout']);
 
+    // Get current user API
+    Route::get('/user', [UserController::class, 'getCurrentUser']);
+
     // Manager API
     Route::middleware(['role:Manager'])->group(function () {
         Route::get('/manager/dailylog', [ManagerController::class, 'getDailyLogStaff']);
         Route::put('/manager/dailylog/{id}', [ManagerController::class, 'updateStatusDailyLog']);
     });
 
-    // Staff API
-    Route::middleware(['role:Staff'])->group(function () {
-        Route::get('/staff/dailylog', [StaffController::class, 'getDailyLogsByUser']);
-    });
-
     // Direktur API
     Route::middleware(['role:Direktur'])->group(function () {
-        // Route::post('/staff/dailylog', [StaffController::class, 'addDailyLogStaff']);
         Route::get('/direktur/dailylog', [DirekturController::class, 'getDailyLogsByManager']);
     });
 
     // Add daily log API for Manager and Staff
     Route::middleware('role:Manager,Staff')->group(function () {
-        Route::post('/dailylog', [ManagerController::class, 'addDailyLog']);
+        Route::post('/dailylog', [DailyLogController::class, 'addDailyLog']);
+        Route::get('/dailylog', [DailyLogController::class, 'getDailyLogByUser']);
     });
 
     // Update daily log status API for Manager and Direktur

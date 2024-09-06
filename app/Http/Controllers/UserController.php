@@ -54,4 +54,20 @@ class UserController extends Controller
         }
     }
 
+    public function getCurrentUser(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $userData = array_merge($user->toArray(), [
+            'nama_role' => $user->role->nama_role,
+            'nama_divisi' => $user->divisi ? $user->divisi->nama_divisi : null
+        ]);
+
+        return response()->json(['user' => $userData], 200);
+    }
+
 }
