@@ -15,6 +15,7 @@ class DailyLog extends Model
         'activity',
         'date',
         'foto',
+        'status',
         'user_id',
     ];
 

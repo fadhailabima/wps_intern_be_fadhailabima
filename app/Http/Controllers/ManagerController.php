@@ -9,32 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class ManagerController extends Controller
 {
-    public function addDailyLogManager(Request $request)
+
+    public function getDailyLogStaff()
     {
-        $validator = Validator::make($request->all(), [
-            'activity' => 'required|string',
-            'date' => 'required|date',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:51200',
-        ]);
+        $user = Auth::user();
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        $dailyLogs = DailyLog::whereHas('user', function ($query) use ($user) {
+            $query->where('divisi_id', $user->divisi_id)
+                ->where('role_id', '!=', $user->role_id);
+        })->get();
 
-        $dailyLog = new DailyLog();
-        $dailyLog->activity = $request->activity;
-        $dailyLog->date = $request->date;
-        $dailyLog->user_id = Auth::id(); // get id of currently logged in user
-        $dailyLog->save();
-
-        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
-            $file = $request->file('foto');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/daillog_proof/', $filename);
-            $dailyLog->foto = $filename;
-            $dailyLog->save(); // Save the model again after assigning the foto field
-        }
-
-        return response()->json(['message' => 'Daily log added successfully', 'data' => $dailyLog], 201);
+        return response()->json(['data' => $dailyLogs], 200);
     }
 }
