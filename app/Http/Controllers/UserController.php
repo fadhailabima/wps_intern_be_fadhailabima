@@ -37,7 +37,7 @@ class UserController extends Controller
         }
 
         $token = $user->createToken('authToken')->plainTextToken;
-        $userData = array_merge($user->toArray(), ['token' => $token]);
+        $userData = array_merge($user->toArray(), ['token' => $token, 'nama_role' => $user->role->nama_role]);
 
         return $this->okResponse("Login Berhasil", ['user' => $userData]);
     }
